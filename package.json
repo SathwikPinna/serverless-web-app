@@ -1,0 +1,13 @@
+{
+  "name": "vercel-serverless-todo-app",
+  "version": "1.0.0",
+  "description": "A beginner-friendly cloud-native serverless to-do web application for Vercel.",
+  "private": true,
+  "scripts": {
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "uuid": "^9.0.1"
+  }
+}

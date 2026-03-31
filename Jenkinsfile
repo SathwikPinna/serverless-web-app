@@ -2,18 +2,20 @@ pipeline {
     agent any
 
     environment {
-        VERCEL_ORG_ID = 'your-vercel-org-id'
-        VERCEL_PROJECT_ID = 'your-vercel-project-id'
-    }
-
-    tools {
-        nodejs 'node20'
+        VERCEL_TOKEN = credentials('vercel-token')
     }
 
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('Check Node and NPM') {
+            steps {
+                bat 'node -v'
+                bat 'npm -v'
             }
         }
 
@@ -31,11 +33,9 @@ pipeline {
 
         stage('Deploy to Vercel') {
             steps {
-                withCredentials([string(credentialsId: 'vercel-token', variable: 'VERCEL_TOKEN')]) {
-                    bat 'vercel pull --yes --environment=production --token %VERCEL_TOKEN%'
-                    bat 'vercel build --prod --token %VERCEL_TOKEN%'
-                    bat 'vercel deploy --prebuilt --prod --token %VERCEL_TOKEN%'
-                }
+                bat 'vercel pull --yes --environment=production --token %VERCEL_TOKEN%'
+                bat 'vercel build --prod --token %VERCEL_TOKEN%'
+                bat 'vercel deploy --prebuilt --prod --token %VERCEL_TOKEN%'
             }
         }
     }
@@ -49,3 +49,4 @@ pipeline {
         }
     }
 }
+

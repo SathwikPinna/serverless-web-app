@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        VERCEL_TOKEN = credentials('vercel-token')
+        VERCEL_TOKEN = 'your_vercel_token_here'
     }
 
     stages {
@@ -12,40 +12,17 @@ pipeline {
             }
         }
 
-        stage('Check Node and NPM') {
-            steps {
-                bat 'node -v'
-                bat 'npm -v'
-            }
-        }
-
-        stage('Install Dependencies') {
+        stage('Install') {
             steps {
                 bat 'npm install'
-            }
-        }
-
-        stage('Install Vercel CLI') {
-            steps {
                 bat 'npm install -g vercel'
             }
         }
 
-        stage('Deploy to Vercel') {
+        stage('Deploy') {
             steps {
-                bat 'vercel pull --yes --environment=production --token %VERCEL_TOKEN%'
-                bat 'vercel build --prod --token %VERCEL_TOKEN%'
-                bat 'vercel deploy --prebuilt --prod --token %VERCEL_TOKEN%'
+                bat 'vercel --prod --token %VERCEL_TOKEN% --yes'
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Deployment to Vercel completed successfully.'
-        }
-        failure {
-            echo 'Deployment failed. Check the Jenkins console output for details.'
         }
     }
 }
